@@ -1,6 +1,7 @@
 ﻿import {Injectable} from '@angular/core';
 import {Orientation} from "../model/Stand/Orientation";
 import {RobotTask} from "../model/Robots/RobotTask";
+import { RobotStatusService } from './type/robot-status.service';
 
 @Injectable({
   providedIn: 'root'
@@ -21,7 +22,9 @@ export class StoreService {
   // BEZ "/"
     // public baseURL = 'https://helike-ra-back-sosnus-develop.azurewebsites.net';
   // public baseURL = 'http://localhost:8080';
-  public baseURL = 'http://localhost:4401';
+  // public baseURL = 'http://localhost:4401';
+  private url = (window.location.host).replace( /:(\d+)/gi, ':4401');
+  public baseURL = 'http://' + this.url;
     
   // public barrierURL = 'http://raptors-barrier-generator.herokuapp.com/'
   // public barrierURL = 'http://localhost:5000/' // dopisać "/"
