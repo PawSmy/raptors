@@ -19,7 +19,8 @@ export class StoreService {
   public mapID = "5e19f1fa9b1eab79e9a58e08";
 
   // BEZ "/"
-  public baseURL = environment.baseURL;
+  private url = (window.location.host).replace( /:(\d+)/gi, ':4401');
+  public baseURL = 'http://' + this.url;
 
   // public barrierURL = 'http://raptors-barrier-generator.herokuapp.com/'
   // public barrierURL = 'http://localhost:5000/' // dopisać "/"
