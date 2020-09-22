@@ -4,11 +4,11 @@
 
 export const environment = {
   production: false,
-  serverUrl: "http://adrastea.westus2.cloudapp.azure.com:3333",
+  serverUrl: "http://localhost:4401",
   refreshRate: 5000,
-  baseURL: "http://helike-ra-back-sosnus-develop.azurewebsites.net",
+  baseURL: "http://localhost:4401",
   barrierURL: "https://helike-ra-barrier-sosnus-develop.azurewebsites.net",
-  enviromentStatus: "environment.ts",
+  enviromentStatus: "environment.local.ts",
 };
 
 /*
