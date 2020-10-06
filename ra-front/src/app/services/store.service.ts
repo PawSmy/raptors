@@ -1,7 +1,9 @@
 ﻿import { Injectable } from "@angular/core";
 import { Orientation } from "../model/Stand/Orientation";
 import { RobotTask } from "../model/Robots/RobotTask";
+import { TaskTemplate } from "../model/Tasks/TaskTemplate";
 import { environment } from "../../environments/environment";
+import { Stand } from '../model/Stand/Stand';
 
 @Injectable({
   providedIn: "root",
@@ -19,7 +21,8 @@ export class StoreService {
   public mapID = "5e19f1fa9b1eab79e9a58e08";
 
   // BEZ "/"
-  private url = (window.location.host).replace( /:(\d+)/gi, ':4401');
+  // private url = (window.location.host).replace( /:(\d+)/gi, ':4401');
+  private url = (window.location.host).replace( /:(\d+)/gi, ':8080');
   public baseURL = 'http://' + this.url;
 
   // public barrierURL = 'http://raptors-barrier-generator.herokuapp.com/'
@@ -28,6 +31,9 @@ export class StoreService {
 
   public robotTaskList: RobotTask[] = [];
   public robotTaskListTemp: RobotTask[] = [];
+
+  public taskTemplateList: TaskTemplate[] = [];
+  public kioskList: Stand[] = [];
 
   public loggedUserID: string;
 }
