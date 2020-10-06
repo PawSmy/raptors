@@ -3,8 +3,7 @@ package pl.raptors.ra_back.service.tasks;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import pl.raptors.ra_back.domain.robots.Behaviour;
-import pl.raptors.ra_back.domain.robots.Robot;
-import pl.raptors.ra_back.domain.robots.RobotTask;
+import pl.raptors.ra_back.domain.tasks.TaskTemplate;
 import pl.raptors.ra_back.domain.type.TaskPriority;
 import pl.raptors.ra_back.repository.tasks.TaskTemplateRepository;
 import pl.raptors.ra_back.service.CRUDService;
@@ -12,56 +11,52 @@ import pl.raptors.ra_back.service.CRUDService;
 import java.util.List;
 
 @Service
-public class TaskTemplateService implements CRUDService<RobotTask> {
+public class TaskTemplateService implements CRUDService<TaskTemplate> {
 
     @Autowired
     TaskTemplateRepository taskTemplateRepository;
 
     @Override
-    public RobotTask addOne(RobotTask robotTask) {
-        return taskTemplateRepository.save(robotTask);
+    public TaskTemplate addOne(TaskTemplate taskTemplate) {
+        return taskTemplateRepository.save(taskTemplate);
     }
 
     @Override
-    public RobotTask getOne(String id) {
+    public TaskTemplate getOne(String id) {
         return taskTemplateRepository.findById(id).orElse(null);
     }
 
     @Override
-    public List<RobotTask> getAll() {
+    public List<TaskTemplate> getAll() {
         return taskTemplateRepository.findAll();
     }
 
     @Override
-    public RobotTask updateOne(RobotTask robotTask) {
-        return taskTemplateRepository.save(robotTask);
+    public TaskTemplate updateOne(TaskTemplate taskTemplate) {
+        return taskTemplateRepository.save(taskTemplate);
     }
 
     @Override
-    public void deleteOne(RobotTask robotTask) {
-        taskTemplateRepository.delete(robotTask);
+    public void deleteOne(TaskTemplate taskTemplate) {
+        taskTemplateRepository.delete(taskTemplate);
     }
 
     @Override
-    public void deleteAll(List<RobotTask> robotTaskList) {
-        for (RobotTask robotTask : robotTaskList) {
-            this.deleteOne(robotTask);
+    public void deleteAll(List<TaskTemplate> robotTaskList) {
+        for (TaskTemplate taskTemplate : robotTaskList) {
+            this.deleteOne(taskTemplate);
         }
     }
 
-    public List<RobotTask> getByRobot(Robot robot) {
-        return taskTemplateRepository.findAllByRobot(robot);
-    }
-
-    public List<RobotTask> getByBehaviour(Behaviour behaviour) {
+    public List<TaskTemplate> getByBehaviour(Behaviour behaviour) {
         return taskTemplateRepository.findAllByBehavioursContaining(behaviour);
     }
 
-    public List<RobotTask> getTasksByUsersIds (List<String> userIdList){
-        return taskTemplateRepository.findAllByUserIDIn(userIdList);
+    public List<TaskTemplate> getByKioskId(String kioskId) {
+        return taskTemplateRepository.findAllByKioskId(kioskId);
     }
 
-    public List<RobotTask> getByPriority(TaskPriority priority) {
+    public List<TaskTemplate> getByPriority(TaskPriority priority) {
         return taskTemplateRepository.findAllByPriority(priority);
     }
 }
