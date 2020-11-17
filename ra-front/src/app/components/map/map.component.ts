@@ -148,13 +148,16 @@ export class MapComponent implements OnInit, OnDestroy {
         this.mapOriginY = mapData.mapOriginY;
         this.mapService.getMap(this.mapId).subscribe(
           data => {
-            this.afterMapLoaded(data);
-            this.subscribe = this.source.subscribe(val => {
-              this.robotService.getAll().subscribe(
-              robots=>{
-                this.updateRobots(robots);
+            const container = document.getElementById('map');
+            if(container) {
+              this.afterMapLoaded(data);
+              this.subscribe = this.source.subscribe(val => {
+                this.robotService.getAll().subscribe(
+                robots=>{
+                  this.updateRobots(robots);
+                });
               });
-            });
+            }
           }
         );
       }
@@ -166,7 +169,11 @@ export class MapComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.subscribe.unsubscribe();
+    try {
+      this.subscribe.unsubscribe();      
+    } catch (error) {
+      
+    }
     //this.subscription.unsubscribe();
   }
 
