@@ -20,11 +20,9 @@ export class StoreService {
   public imageResolution = 1984;
   public loadedMapId = "5e19f1fa9b1eab79e9a58e08";
   public currentMapId = "5e19f1fa9b1eab79e9a58e08";
+  public baseURL : string;
 
-  // BEZ "/"
-  public baseURL = environment.baseURL;
-  // private url = (window.location.host).replace( /:(\d+)/gi, ':8080');
-  // public baseURL = 'http://192.168.2.45:4401';
+  
 
   // public barrierURL = 'http://raptors-barrier-generator.herokuapp.com/'
   // public barrierURL = 'http://localhost:5000/' // dopisać "/"
@@ -37,6 +35,18 @@ export class StoreService {
   public kioskList: Stand[] = [];
 
   public loggedUserID: string;
+
+  constructor()
+  {
+    let url = window.location.host;
+    if(url == "smart.dell.edc.co.pl"){
+      this.baseURL = 'http://api.smart.dell.edc.co.pl';
+    }
+    else {
+      url = (window.location.host).replace( /:(\d+)/gi, ':4401');
+      this.baseURL = 'http://' + url;
+    }
+  }
 }
 
 export function quaternionFromAxisAngle(axis, angle): Orientation {
