@@ -25,13 +25,13 @@ export class GraphListComponent implements OnInit, OnChanges {
   @Output()
   graphToEdit: EventEmitter<Graph> = new EventEmitter<Graph>();
 
-  constructor(private store: StoreService,
+  constructor(private storeService: StoreService,
               private graphService: GraphService,
               private toast: ToastrService) {
   }
 
   ngOnInit() {
-    this.graphService.getAllByMapId(this.store.mapID).subscribe(
+    this.graphService.getAllByMapId(this.storeService.currentMapId).subscribe(
       graphs => this.graphs = graphs,
       error => this.toast.error("Błąd podczas pobierania danych: " + error.message)
     )
@@ -39,7 +39,7 @@ export class GraphListComponent implements OnInit, OnChanges {
 
   ngOnChanges(changes: { [property: string]: SimpleChange }) {
     // Extract changes to the input property by its name
-    this.graphService.getAllByMapId(this.store.mapID).subscribe(
+    this.graphService.getAllByMapId(this.storeService.currentMapId).subscribe(
       graphs => this.graphs = graphs,
       error => this.toast.error("Błąd podczas pobierania danych: " + error.message)
     )

@@ -38,7 +38,7 @@ export class StandListComponent implements OnInit, OnChanges {
   }
 
   ngOnInit() {
-    this.standService.getAllByMapId(this.storeService.mapID).subscribe(
+    this.standService.getAllByMapId(this.storeService.currentMapId).subscribe(
       stands => this.stands = stands,
       error => this.toast.error("Błąd podczas pobierania danych: " + error.message)
     )
@@ -51,7 +51,7 @@ export class StandListComponent implements OnInit, OnChanges {
   ngOnChanges(changes: { stand: SimpleChange }) {
     // Extract changes to the input property by its name
     if (changes.stand.currentValue)
-      this.standService.getAllByMapId(this.storeService.mapID).subscribe(
+      this.standService.getAllByMapId(this.storeService.loadedMapId).subscribe(
         stands => this.stands = stands,
         error => this.toast.error("Błąd podczas pobierania danych: " + error.message)
       )

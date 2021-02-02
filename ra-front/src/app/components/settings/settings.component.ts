@@ -3,6 +3,7 @@ import {ContactInfo} from '../../model/Settings/ContactInfo';
 import {InstanceInfo} from '../../model/Settings/InstanceInfo';
 import {MapInfo} from '../../model/Settings/MapInfo';
 import {SettingsService} from '../../services/settings.service';
+import {StoreService} from '../../services/store.service';
 import {MapService} from '../../services/map.service';
 import {ContactInfos} from '../../model/Settings/ContactInfos';
 import {AuthService} from '../../services/auth.service';
@@ -29,6 +30,7 @@ export class SettingsComponent implements OnInit {
 
   constructor(private settingsService: SettingsService,
               private mapService: MapService,
+              private storeService: StoreService,
               public authService: AuthService,
               private toastr: ToastrService) {
   }
@@ -64,6 +66,7 @@ export class SettingsComponent implements OnInit {
     this.settingsService.updateCurrentMap(this.currentMap.mapId).subscribe(
       result => {
         this.toastr.success('Edytowano pomyślnie');
+        this.storeService.currentMapId = this.currentMap.mapId;
       },
       error => {
         console.log(error);

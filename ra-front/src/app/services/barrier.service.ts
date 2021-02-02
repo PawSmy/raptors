@@ -18,7 +18,7 @@ export class BarrierService {
   public getBarriers(robot_diameter: string): Observable<any> {
     return this.http.get(
       this.barrierURL +
-        `dummy_map?map_file_name=${this.store.mapID}&map_folder_name=${this.store.mapID}&robot_diameter=${robot_diameter}`,
+        `dummy_map?map_file_name=${this.store.currentMapId}&map_folder_name=${this.store.currentMapId}&robot_diameter=${robot_diameter}`,
       { responseType: "text" }
     );
   }

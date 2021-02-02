@@ -34,6 +34,7 @@ export class TaskTemplateCreatorComponent implements OnInit {
     null,
     null,
     new TaskPriority("", 0),
+    null,
     null
   );
   defaultBehaviours = {};
@@ -147,6 +148,7 @@ export class TaskTemplateCreatorComponent implements OnInit {
     this.taskTemplate.kioskId = this.selectedKioskId;
     // this.taskTemplate.status.name = this.selectedTaskStatusName;
     this.taskTemplate.behaviours = this.behavioursComplete;
+    this.taskTemplate.mapId = this.storeService.currentMapId;
 
     this.taskTemplateService.save(this.taskTemplate).subscribe(
       result => {
@@ -160,6 +162,7 @@ export class TaskTemplateCreatorComponent implements OnInit {
           this.storeService.taskTemplateList.push(result);
         }
         this.taskTemplate = new TaskTemplate(
+          null,
           null,
           null,
           null,

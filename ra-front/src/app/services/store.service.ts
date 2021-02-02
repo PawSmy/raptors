@@ -18,7 +18,8 @@ export class StoreService {
   public originX = -10.0;
   public originY = -10.0;
   public imageResolution = 1984;
-  public mapID = "5e19f1fa9b1eab79e9a58e08";
+  public loadedMapId = "5e19f1fa9b1eab79e9a58e08";
+  public currentMapId = "5e19f1fa9b1eab79e9a58e08";
 
   // BEZ "/"
   public baseURL = environment.baseURL;

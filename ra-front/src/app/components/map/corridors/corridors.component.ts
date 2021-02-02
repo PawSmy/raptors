@@ -51,7 +51,7 @@ export class CorridorsComponent implements OnInit, OnDestroy {
   constructor(private mapService: MapService,
               private settingsService: SettingsService,
               private corridorService: CorridorService,
-              private store: StoreService,
+              private storeService: StoreService,
               private toast: ToastrService,
               private movementPathService: MovementPathService) {
   }
@@ -183,15 +183,21 @@ export class CorridorsComponent implements OnInit, OnDestroy {
     this.settingsService.getCurrentMap().subscribe(
       mapData => {
         this.mapId = mapData.mapId;
-        localStorage.setItem(this.store.mapID, this.mapId)
         this.mapResolution = mapData.mapResolutionX;
         this.mapOriginX = mapData.mapOriginX;
         this.mapOriginY = mapData.mapOriginY;
-        this.mapService.getMap(this.mapId).subscribe(
-          data => {
-            this.afterMapLoaded(data);
-          }
-        );
+        if(this.mapId != this.storeService.loadedMapId){
+          this.storeService.loadedMapId = this.mapId;
+          this.mapService.getMap(this.mapId).subscribe(
+            data => {
+              this.storeService.mapURL = data;
+              this.afterMapLoaded(data);
+            }
+          );
+        }
+        else {
+          this.afterMapLoaded(this.storeService.mapURL);
+        }
       }
     );
   }

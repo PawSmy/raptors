@@ -23,7 +23,7 @@ import {RobotStatusService} from "../../../services/type/robot-status.service";
 export class TaskTemplateListComponent implements OnInit {
   modalID = "taskRobotModal";
 
-  taskTemplate: TaskTemplate = new TaskTemplate(null, null, null, null);
+  taskTemplate: TaskTemplate = new TaskTemplate(null, null, null, null, null);
   robot = new Robot(null, null, null, null, null, null, null, null, null);
   robotStatusFree: RobotStatus = new RobotStatus(null);
   robotStatusDuringTask: RobotStatus = new RobotStatus(null);
@@ -74,7 +74,7 @@ export class TaskTemplateListComponent implements OnInit {
       result => {
         this.storeService.taskTemplateList = this.storeService.taskTemplateList.filter(item => item != taskTemplate);
         this.toastr.success("Usunięto pomyślnie");
-        this.taskTemplate = new TaskTemplate(null, null, null, null);
+        this.taskTemplate = new TaskTemplate(null, null, null, null, null);
 
       },
       error => {
@@ -86,7 +86,7 @@ export class TaskTemplateListComponent implements OnInit {
   }
 
   reset() {
-    this.taskTemplate = new TaskTemplate(null, null, null, null);
+    this.taskTemplate = new TaskTemplate(null, null, null, null, null);
   }
 
 }

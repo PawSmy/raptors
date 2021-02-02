@@ -54,13 +54,13 @@ export class MapScaledComponent implements OnInit, OnChanges {
   }
 
   private loadMap() {
-    if (localStorage.getItem(this.store.mapID) !== null) {
-      this.afterMapLoaded(localStorage.getItem(this.store.mapID))
+    if (localStorage.getItem(this.store.currentMapId) !== null) {
+      this.afterMapLoaded(localStorage.getItem(this.store.currentMapId))
     } else {
-      this.mapService.getMap(this.store.mapID).subscribe(
+      this.mapService.getMap(this.store.currentMapId).subscribe(
         data => {
           this.afterMapLoaded(data);
-          localStorage.setItem(this.store.mapID, data)
+          localStorage.setItem(this.store.currentMapId, data)
         }
       );
     }

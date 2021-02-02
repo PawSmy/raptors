@@ -149,25 +149,42 @@ export class MapComponent implements OnInit, OnDestroy {
       mapData => {
         console.log(mapData);
         this.mapId = mapData.mapId;
-        this.storeService.mapID = this.mapId;
-        console.log(this.storeService.mapID);
+        console.log(this.storeService.loadedMapId);
         this.mapResolution = mapData.mapResolutionX;
         this.mapOriginX = mapData.mapOriginX;
         this.mapOriginY = mapData.mapOriginY;
-        this.mapService.getMap(this.mapId).subscribe(
-          data => {
-            const container = document.getElementById('map');
-            if(container) {
-              this.afterMapLoaded(data);
-              this.subscribe = this.source.subscribe(val => {
-                this.robotService.getAll().subscribe(
-                robots=>{
-                  this.updateRobots(robots);
+        if(this.mapId != this.storeService.loadedMapId){
+          this.storeService.loadedMapId = this.mapId;
+          this.storeService.currentMapId = this.mapId;
+          this.mapService.getMap(this.mapId).subscribe(
+            data => {
+              const container = document.getElementById('map');
+              this.storeService.mapURL = data;
+              if(container) {
+                this.afterMapLoaded(data);
+                this.subscribe = this.source.subscribe(val => {
+                  this.robotService.getAll().subscribe(
+                  robots=>{
+                    this.updateRobots(robots);
+                  });
                 });
-              });
+              }
             }
+          );
+        }
+        else
+        {
+          const container = document.getElementById('map');
+          if(container) {
+            this.afterMapLoaded(this.storeService.mapURL);
+            this.subscribe = this.source.subscribe(val => {
+              this.robotService.getAll().subscribe(
+              robots=>{
+                this.updateRobots(robots);
+              });
+            });
           }
-        );
+        }
       }
     );
     // console.log(this.storeService.url);

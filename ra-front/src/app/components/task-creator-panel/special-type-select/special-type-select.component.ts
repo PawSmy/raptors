@@ -72,7 +72,7 @@ export class SpecialTypeSelectComponent implements OnInit {
     }
 
     if (this.typeName === 'stand') {
-      this.standService.getAllByMapId(this.storeService.mapID).subscribe(res => {
+      this.standService.getAllByMapId(this.storeService.loadedMapId).subscribe(res => {
         this.specialTypes = res;
       });
     }

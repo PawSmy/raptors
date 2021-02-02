@@ -74,15 +74,22 @@ export class PolygonsComponent implements OnInit, OnDestroy {
     this.settingsService.getCurrentMap().subscribe(
       mapData => {
         this.mapId = mapData.mapId;
-        localStorage.setItem(this.storeService.mapID, this.mapId)
         this.mapResolution = mapData.mapResolutionX;
         this.mapOriginX = mapData.mapOriginX;
         this.mapOriginY = mapData.mapOriginY;
-        this.mapService.getMap(this.mapId).subscribe(
-          data => {
-            this.afterMapLoaded(data);
-          }
-        );
+        if(this.mapId != this.storeService.loadedMapId){
+          this.storeService.loadedMapId = this.mapId;
+          this.storeService.currentMapId = this.mapId;
+          this.mapService.getMap(this.mapId).subscribe(
+            data => {
+              this.storeService.mapURL = data;
+              this.afterMapLoaded(data);
+            }
+          );
+        }
+        else {
+          this.afterMapLoaded(this.storeService.mapURL);
+        }
       }
     );
   }
