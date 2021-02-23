@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import pl.raptors.ra_back.domain.kiosk.Kiosk;
+import pl.raptors.ra_back.domain.kiosk.KioskExtended;
 import pl.raptors.ra_back.domain.tasks.TaskTemplate;
 import pl.raptors.ra_back.service.kiosk.KioskService;
 
@@ -44,6 +45,12 @@ public class KioskController {
     @DeleteMapping("/delete")
     public void delete(@RequestBody @Valid Kiosk kiosk) {
         kioskService.deleteOne(kiosk);
+    }
+
+    @PreAuthorize("hasAuthority('ROLE_ADMIN') or hasAuthority('ROLE_SERVICEMAN') or hasAuthority('ROLE_ROBOT')")
+    @GetMapping("/{id}")
+    public KioskExtended getKiosk(@PathVariable String id) {
+        return kioskService.getKiosk(id);
     }
 
     @PreAuthorize("hasAuthority('ROLE_ADMIN') or hasAuthority('ROLE_SERVICEMAN') or hasAuthority('ROLE_ROBOT')")

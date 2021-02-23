@@ -6,9 +6,12 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;
 import pl.raptors.ra_back.domain.kiosk.Kiosk;
+import pl.raptors.ra_back.domain.kiosk.KioskExtended;
+import pl.raptors.ra_back.domain.movement.Stand;
 import pl.raptors.ra_back.domain.tasks.TaskTemplate;
 import pl.raptors.ra_back.repository.kiosk.KioskRepository;
 import pl.raptors.ra_back.repository.tasks.TaskTemplateRepository;
+import pl.raptors.ra_back.repository.movement.StandRepository;
 import pl.raptors.ra_back.service.settings.CurrentMapService;
 import pl.raptors.ra_back.service.CRUDService;
 // import org.springframework.data.mongodb.core.query.Query;
@@ -25,6 +28,9 @@ public class KioskService implements CRUDService<Kiosk> {
 
     @Autowired
     TaskTemplateRepository taskTemlateRepository;
+
+    @Autowired
+    StandRepository standRepository;
 
     @Autowired
     CurrentMapService currentMapService;
@@ -59,6 +65,21 @@ public class KioskService implements CRUDService<Kiosk> {
         for (Kiosk kiosk : kioskList) {
             this.deleteOne(kiosk);
         }
+    }
+
+    public KioskExtended getKiosk(String id) {
+        // Query query = new Query();
+        // List<Criteria> criteria = new ArrayList<>();
+        Kiosk kiosk = this.getOne(id);
+        String mapId = currentMapService.getAll().get(0).getMapId();
+
+        Example<Stand> example = Example.of(new Stand(null, null, null, null, null, id, mapId), 
+                                                   ExampleMatcher.matchingAll().withIgnoreNullValues().withIgnorePaths(new String[] { "id", "name", "pose", "parkingType", "standType", "standStatus"}));
+        List<Stand> standList = standRepository.findAll(example);
+
+        KioskExtended kioskData = new KioskExtended(kiosk.getId(), kiosk.getName(), standList.get(0).getId());
+
+        return kioskData;
     }
 
     public List<TaskTemplate> getTasks(String id) {
