@@ -43,6 +43,11 @@ export class SettingsService {
     return this.http.get<MapInfo>(this.url + 'updateCurrentMap/' + mapId, {headers: headers, responseType: 'json'});
   }
 
+  updateCurrentGraph(graphId) {
+    const headers = {Authorization: 'Basic ' + sessionStorage.getItem('token')};
+    return this.http.get<MapInfo>(this.url + 'updateCurrentGraph/' + graphId, {headers: headers, responseType: 'json'});
+  }
+
   updateContactInfo(noweInformacje) {
     // const headers = {Authorization: 'Basic ' + sessionStorage.getItem('token')};
     return this.http.post<ContactInfo[]>(this.url + 'updateContactInfo', noweInformacje);

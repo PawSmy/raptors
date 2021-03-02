@@ -48,6 +48,11 @@ public class SettingsController {
         return currentMapService.update(id);
     }
 
+    @GetMapping("/updateCurrentGraph/{id}")
+    public MapInfo updateCurrentGraph(@PathVariable String id) {
+        return currentMapService.updateGraph(id);
+    }
+
     @PostMapping("/updateInstanceInfo")
     public InstanceInfo updateInstanceInfo(@RequestBody @Valid InstanceInfo instanceInfo) {
         return instanceInfoService.updateOne(instanceInfo);

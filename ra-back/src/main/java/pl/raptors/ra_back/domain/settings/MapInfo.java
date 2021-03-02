@@ -13,6 +13,7 @@ public class MapInfo {
     @Id
     private String Id = "default";
     private String mapId;
+    private String graphId;
     private Double mapResolutionX;
     private Double mapResolutionY;
     private Integer imageResolutionX;
@@ -20,10 +21,11 @@ public class MapInfo {
     private Double mapOriginX;
     private Double mapOriginY;
 
-    public MapInfo(String mapId, Double mapResolutionX, Double mapResolutionY,
+    public MapInfo(String mapId, String graphId, Double mapResolutionX, Double mapResolutionY,
                       Integer imageResolutionX,  Integer imageResolutionY,
                       Double mapOriginX, Double mapOriginY) {
         this.mapId = mapId;
+        this.graphId = graphId;
         this.mapResolutionX = mapResolutionX;
         this.mapResolutionY = mapResolutionY;
         this.imageResolutionX = imageResolutionX;

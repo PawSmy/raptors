@@ -9,6 +9,7 @@
     <!--      </thead>-->
 
     <tbody>
+
     <tr>
       <th scope="row">Aktualna mapa
         <div style="margin: 10px">
@@ -19,6 +20,7 @@
         </div>
 
       </th>
+
       <table class="table table-sm table-striped">
         <tr>
           <th scope="row">ID mapy</th>
@@ -38,6 +40,26 @@
         </tr>
       </table>
     </tr>
+
+    <tr>
+      <th scope="row">Graf
+        <div style="margin: 10px">
+          <button *ngIf="authService.isAdmin()" class="btn btn-info btn-rounded btn-sm my-0" data-toggle="modal"
+                  [attr.data-target]="'#' + graphModal"  (click)="editGraphInfo(currentMap)"
+          >Edytuj
+          </button>
+        </div>
+  
+      </th>
+
+      <table class="table table-sm table-striped">
+        <tr>
+          <th scope="row">ID grafu</th>
+          <td>{{this.currentMap.graphId}}</td>
+        </tr>
+      </table>
+    </tr>
+    
     <tr>
       <th scope="row">Dane instancji
         <div style="margin: 10px">
@@ -119,6 +141,30 @@
       <mat-select [(ngModel)]="currentMap.mapId" name="id" [value]='currentMap.mapId'>
           <mat-option *ngFor="let map of mapsData" [value]="map.id" >
               {{map.name}}
+          </mat-option>
+      </mat-select>
+    </mat-form-field>
+  </form>
+</app-form-modal-template>
+
+
+<app-form-modal-template [modalName]="'Wybór grafu'"
+                         [modalID]="graphModal"
+                         [disableSubmit]="!modalForm.form.valid"
+                         (onModalCancel)="reset()"
+                         (onModalClose)="updateGraphInfo()">
+  <form #modalForm="ngForm">
+    <!-- <div class="md-form mb-5">
+      <i class="fas fa-file-signature prefix grey-text"></i>
+      <input type="text" id="currentMapId" class="form-control validate" required
+             [(ngModel)]="currentMap.currentMapId" name="id">
+      <label for="newMapId">Id mapy</label>
+    </div> -->
+    <mat-form-field>
+      <mat-label>Graf</mat-label>
+      <mat-select [(ngModel)]="currentMap.graphId" name="graphId" [value]='currentMap.graphId'>
+          <mat-option *ngFor="let graph of graphs" [value]="graph.id" >
+              {{graph.id}}
           </mat-option>
       </mat-select>
     </mat-form-field>

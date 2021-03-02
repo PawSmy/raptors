@@ -62,7 +62,7 @@ public class CurrentMapService implements CRUDService<MapInfo> {
             try {
                 BufferedImage img = ImageIO.read(new ByteArrayInputStream(PGMIO.pgm2jpg(pgmBytes)));
                 mapYaml = mapper.readValue(yamlBytes, MapYaml.class);
-                currentMap = new MapInfo(map.getId(), mapYaml.resolution, mapYaml.resolution,
+                currentMap = new MapInfo(map.getId(), null, mapYaml.resolution, mapYaml.resolution,
                                         new Integer(img.getHeight()), new Integer(img.getWidth()),
                                         mapYaml.origin[0], mapYaml.origin[1]);
             }
@@ -70,6 +70,16 @@ public class CurrentMapService implements CRUDService<MapInfo> {
                 e.printStackTrace();
                 return null;
             }
+            return currentMapRepository.save(currentMap);
+        }
+        return null;
+    }
+    
+    public MapInfo updateGraph(String id) {
+        MapInfo currentMap;
+        currentMap = this.getAll().get(0);
+        if(currentMap!=null) {
+            currentMap.setGraphId(id);
             return currentMapRepository.save(currentMap);
         }
         return null;
