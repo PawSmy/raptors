@@ -8,7 +8,7 @@
 
 <table class="table">
   <tbody>
-    <tr *ngFor="let prop of properties" (click)="updateRoot(prop)">
+    <tr *ngFor="let prop of _properties" (click)="updateRoot(prop)">
       <app-table-row [prop]="prop"></app-table-row>
     </tr>
   </tbody>

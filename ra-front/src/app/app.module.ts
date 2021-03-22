@@ -60,16 +60,11 @@ import { CorridorListComponent } from "./components/map/corridors/corridor-list/
 import { MovementPathListComponent } from "./components/map/movement-path/movement-path-list/movement-path-list.component";
 import { AccessForbiddenComponent } from "./components/access-forbidden/access-forbidden.component";
 import { ColorPickerModule } from "ngx-color-picker";
-import { RobotPanelComponent } from "./components/robotpanel/robot-panel.component";
-import { RobotDetailsComponent } from "./components/robotpanel/robot-details/robot-details.component";
-import { MapScaledComponent } from "./components/robotpanel/map-scaled/map-scaled.component";
 import { ExtraRobotElementComponent } from "./components/adminpanel/data/extra-robot-element/extra-robot-element.component";
 import { ElementFunctionalityComponent } from "./components/adminpanel/data/element-functionality/element-functionality.component";
 import { TaskpanelDetailsComponent } from "./components/taskpanel/taskpanel-details/taskpanel-details.component";
 import { TaskpanelListComponent } from "./components/taskpanel/taskpanel-list/taskpanel-list.component";
 import { UserspanelComponent } from "./components/userspanel/userspanel.component";
-import { RobotModelComponent } from "./components/robotpanel/robot-model/robot-model.component";
-import { LogsTableComponent } from "./components/robotpanel/logs-table/logs-table.component";
 import { RobotListComponent } from "./components/robot-list/robot-list.component";
 import { RobotsTableComponent } from "./components/robot-list/robots-table/robots-table.component";
 import { RobotsToApproveTableComponent } from "./components/robot-list/robots-toapprove-table/robots-toapprove-table.component";
@@ -87,6 +82,8 @@ import { MatExpansionModule } from "@angular/material/expansion";
 import { MatDialogModule } from "@angular/material/dialog";
 import { TaskDetailsComponent } from "./components/task-creator-panel/task-details/task-details.component";
 import { SpecialTypeSelectComponent } from "./components/task-creator-panel/special-type-select/special-type-select.component";
+import { MapScaledComponent } from "./components/robotpanel-new/map-scaled/map-scaled.component";
+import { LogsTableComponent } from "./components/robotpanel-new/logs-table/logs-table.component";
 import { RobotPanelComponentNew } from "./components/robotpanel-new/robot-panel.component";
 import { StatusTableComponent } from "./components/robotpanel-new/status-table/status-table.component";
 import { ModelTableComponent } from "./components/robotpanel-new/model-table/model-table.component";
@@ -144,8 +141,6 @@ const config: InputFileConfig = {};
     CorridorListComponent,
     MovementPathListComponent,
     AccessForbiddenComponent,
-    RobotPanelComponent,
-    RobotDetailsComponent,
     MapScaledComponent,
     RobotPanelComponentNew,
     StatusTableComponent,
@@ -154,7 +149,6 @@ const config: InputFileConfig = {};
     UserspanelComponent,
     TaskpanelDetailsComponent,
     TaskpanelListComponent,
-    RobotModelComponent,
     LogsTableComponent,
     RobotListComponent,
     RobotsTableComponent,

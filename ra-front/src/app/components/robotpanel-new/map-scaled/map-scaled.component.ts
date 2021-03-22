@@ -8,6 +8,7 @@ import '../../../../lib/leaflet-easybutton/src/easy-button.css';
 
 import 'leaflet-path-transform';
 import { StoreService } from "../../../services/store.service";
+import { SettingsService } from '../../../services/settings.service';
 import { Robot } from "../../../model/Robots/Robot";
 import { ROBOTICON } from "../../map/map.component";
 
@@ -28,15 +29,23 @@ export class MapScaledComponent implements OnInit, OnChanges {
 
   public dataLoaded = false;
   public mapLoaded = false;
-  private imageResolution;
+
+  //Map related variables
   private map;
-  private mapResolution = 0.01;//TODO()
   private imageURL = '';
+  private mapId;
+  private mapResolution;
+  private mapOriginX;
+  private mapOriginY;
+  private imageResolution;
   private marker;
+
+  
 
 
   constructor(private mapService: MapService,
-    private store: StoreService) {
+              private settingsService: SettingsService,
+              private storeService: StoreService) {
   }
 
   ngOnInit() {
@@ -54,16 +63,27 @@ export class MapScaledComponent implements OnInit, OnChanges {
   }
 
   private loadMap() {
-    if (localStorage.getItem(this.store.currentMapId) !== null) {
-      this.afterMapLoaded(localStorage.getItem(this.store.currentMapId))
-    } else {
-      this.mapService.getMap(this.store.currentMapId).subscribe(
-        data => {
-          this.afterMapLoaded(data);
-          localStorage.setItem(this.store.currentMapId, data)
+    this.settingsService.getCurrentMap().subscribe(
+      mapData => {
+        this.mapId = mapData.mapId;
+        this.mapResolution = mapData.mapResolutionX;
+        this.mapOriginX = mapData.mapOriginX;
+        this.mapOriginY = mapData.mapOriginY;
+        if(this.mapId != this.storeService.loadedMapId){
+          this.storeService.loadedMapId = this.mapId;
+          this.storeService.currentMapId = this.mapId;
+          this.mapService.getMap(this.mapId).subscribe(
+            data => {
+              this.storeService.mapURL = data;
+              this.afterMapLoaded(data);
+            }
+          );
         }
-      );
-    }
+        else {
+          this.afterMapLoaded(this.storeService.mapURL);
+        }
+      }
+    );
   }
 
   private afterMapLoaded(data: String) {
@@ -100,24 +120,24 @@ export class MapScaledComponent implements OnInit, OnChanges {
       this.map.removeLayer(this.marker)
     }
     const position = [
-      this.getMapCoordinates(Number(robot.pose.position.y)),
-      this.getMapCoordinates(Number(robot.pose.position.x))
+      this.getMapCoordinates(Number(robot.pose.position.y), this.mapOriginY),
+      this.getMapCoordinates(Number(robot.pose.position.x), this.mapOriginX)
     ];
     this.marker = L.marker(position, { icon: ROBOTICON });
     this.marker.addTo(this.map);
     this.marker.bindPopup(
       "Robot Details<br />Position x: "
-      + this.getRealCoordinates(this.marker.getLatLng().lng)
+      + this.getRealCoordinates(this.marker.getLatLng().lng, this.mapOriginX)
       + "<br />Position y: " +
-      +this.getRealCoordinates(this.marker.getLatLng().lat));
+      +this.getRealCoordinates(this.marker.getLatLng().lat, this.mapOriginY));
   }
 
-  getRealCoordinates(value: number) {
-    return (value * this.mapResolution * (this.imageResolution / this.mapContainerSize) - ((this.imageResolution * this.mapResolution) / 2))
+  getRealCoordinates(value: number, origin : number) {
+    return (value * this.mapResolution * (this.imageResolution /  this.mapContainerSize) + origin)
   }
 
-  getMapCoordinates(value) {
-    return ((value) + (this.imageResolution * this.mapResolution) / 2) * (1 / this.mapResolution) * (this.mapContainerSize / this.imageResolution)
+  getMapCoordinates(value, origin) {
+    return (value - origin) * (1 / this.mapResolution) * ( this.mapContainerSize / this.imageResolution)
   }
 
   getRounded(value) {

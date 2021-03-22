@@ -61,8 +61,9 @@
            aria-haspopup="true" aria-expanded="false"> <i class="fas fa-cogs"></i>Zadania</a>
         <div class="dropdown-menu dropdown-primary" aria-labelledby="navbarDropdownMenuLink">
           <a class="dropdown-item" [routerLink]="['task-creator-panel']">Dodaj zadanie</a>
-          <a class="dropdown-item" [routerLink]="['task-template-creator-panel']">Dodaj wzorzec zadanie</a>
-          <a class="dropdown-item" [routerLink]="['kiosk-task-mapping']">Przypisz do Kiosku</a>
+          <div *ngIf="authService.isAdmin() || authService.isServiceman() || authService.isSuperUser()">
+            <a class="dropdown-item" [routerLink]="['task-template-creator-panel']">Dodaj wzorzec zadanie</a>
+          </div>
         </div>
         </div>
       </li>
@@ -71,7 +72,7 @@
         <div *ngIf="authService.isAdmin() || authService.isServiceman()">
           <a class="nav-link" [routerLink]="['robots']">
             <i class="fas fa-tasks"></i>
-            Zarzdzanie robotami
+            Zarządzanie robotami
             <span class="sr-only">(current)</span>
           </a>
         </div>
