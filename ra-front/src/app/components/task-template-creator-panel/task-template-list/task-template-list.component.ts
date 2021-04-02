@@ -13,6 +13,8 @@ import {Robot} from "../../../model/Robots/Robot";
 import {RobotStatus} from "../../../model/Robots/RobotStatus";
 import {RobotService} from "../../../services/robot.service";
 import {RobotStatusService} from "../../../services/type/robot-status.service";
+import {Kiosk} from "../../../model/Kiosk/Kiosk";
+import {KioskService} from "../../../services/kiosk.service";
 
 @Component({
   selector: 'app-task-template-list',
@@ -29,6 +31,7 @@ export class TaskTemplateListComponent implements OnInit {
   robotStatusDuringTask: RobotStatus = new RobotStatus(null);
   behaviours: Behaviour[] = [];
   selectedBehaviour: string;
+  kiosks: Kiosk[] = [];
 
   taskPriorities: TaskPriority[] = [];
   selectedTaskPriority: string;
@@ -38,7 +41,8 @@ export class TaskTemplateListComponent implements OnInit {
   constructor(private behaviourService: BehaviourService,
               private taskPriorityService: TaskPriorityService, private TaskTemplateService: TaskTemplateService,
               private toastr: ToastrService, private authService: AuthService, private userService: UserService,
-              private storeService: StoreService, private robotService: RobotService, private robotStatusService: RobotStatusService) {
+              private storeService: StoreService, private robotService: RobotService, private robotStatusService: RobotStatusService,
+              private KioskService: KioskService) {
     this.taskTemplate.behaviours = []
   }
 
@@ -62,6 +66,13 @@ export class TaskTemplateListComponent implements OnInit {
         }
       })
     });
+
+    this.KioskService.getAll().subscribe(
+      kiosks => {
+        console.log("Pobrane wszystkie kiosk: " + kiosks);
+        this.kiosks = kiosks;
+      }
+    );
   }
 
   edit(taskTemplate: TaskTemplate) {
@@ -87,6 +98,13 @@ export class TaskTemplateListComponent implements OnInit {
 
   reset() {
     this.taskTemplate = new TaskTemplate(null, null, null, null, null);
+  }
+
+  getKioskName(kioskId: string){
+    var text = ""
+    var kioskName = this.kiosks.find(({ id }) => id === kioskId);
+    if (kioskName) text = kioskName.name;
+    return text;
   }
 
 }

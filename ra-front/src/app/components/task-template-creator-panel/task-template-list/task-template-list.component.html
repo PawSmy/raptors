@@ -23,7 +23,7 @@
                 <tr *ngFor="let data of storeService.taskTemplateList; let i = index">
                     <th scope="row">{{ i + 1 }}</th>
                     <td>{{ data.name }}</td>
-                    <td>{{ data.kioskId }}</td>
+                    <td>{{ getKioskName(data.kioskId) }}</td>
                     <td>{{ data.priority.name }}</td>
                     <td>
                         <button class="btn btn-success btn-rounded btn-sm my-0" [routerLink]="['details', data.id]">

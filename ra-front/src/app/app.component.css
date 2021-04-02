@@ -44,3 +44,8 @@ body {
     display: inline;
     width: 82%;
 }
+
+.dropdown-menu
+{
+    z-index: 2000;
+}
