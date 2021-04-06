@@ -25,7 +25,7 @@ public class KioskController {
         return kioskService.getAll();
     }
 
-    @PreAuthorize("hasAuthority('ROLE_ADMIN') or hasAuthority('ROLE_SERVICEMAN') or hasAuthority('ROLE_ROBOT')")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN') or hasAuthority('ROLE_SERVICEMAN')")
     @PostMapping("/add")
     public Kiosk add(@RequestBody @Valid Kiosk kiosk) {
         if (kiosk.getId() != null) {
@@ -35,25 +35,25 @@ public class KioskController {
         }
     }
 
-    @PreAuthorize("hasAuthority('ROLE_ADMIN') or hasAuthority('ROLE_SERVICEMAN') or hasAuthority('ROLE_ROBOT')")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN') or hasAuthority('ROLE_SERVICEMAN')")
     @PostMapping("/update")
     public Kiosk update(@RequestBody @Valid Kiosk kiosk) {
         return kioskService.updateOne(kiosk);
     }
 
-    @PreAuthorize("hasAuthority('ROLE_ADMIN') or hasAuthority('ROLE_SERVICEMAN') or hasAuthority('ROLE_ROBOT')")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN') or hasAuthority('ROLE_SERVICEMAN') ")
     @DeleteMapping("/delete")
     public void delete(@RequestBody @Valid Kiosk kiosk) {
         kioskService.deleteOne(kiosk);
     }
 
-    @PreAuthorize("hasAuthority('ROLE_ADMIN') or hasAuthority('ROLE_SERVICEMAN') or hasAuthority('ROLE_ROBOT')")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN') or hasAuthority('ROLE_SERVICEMAN') or hasAuthority('ROLE_REGULAR_USER')")
     @GetMapping("/{id}")
     public KioskExtended getKiosk(@PathVariable String id) {
         return kioskService.getKiosk(id);
     }
 
-    @PreAuthorize("hasAuthority('ROLE_ADMIN') or hasAuthority('ROLE_SERVICEMAN') or hasAuthority('ROLE_ROBOT')")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN') or hasAuthority('ROLE_SERVICEMAN') or hasAuthority('ROLE_REGULAR_USER')")
     @GetMapping("/tasks/{id}")
     public List<TaskTemplate> getTasks(@PathVariable String id) {
         return kioskService.getTasks(id);

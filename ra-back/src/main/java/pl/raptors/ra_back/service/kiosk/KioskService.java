@@ -77,7 +77,13 @@ public class KioskService implements CRUDService<Kiosk> {
                                                    ExampleMatcher.matchingAll().withIgnoreNullValues().withIgnorePaths(new String[] { "id", "name", "pose", "parkingType", "standType", "standStatus"}));
         List<Stand> standList = standRepository.findAll(example);
 
-        KioskExtended kioskData = new KioskExtended(kiosk.getId(), kiosk.getName(), standList.get(0).getId());
+        String standId = null;
+
+        if (!standList.isEmpty()){
+            standId = standList.get(0).getId();
+        }
+
+        KioskExtended kioskData = new KioskExtended(kiosk.getId(), kiosk.getName(), standId);
 
         return kioskData;
     }
