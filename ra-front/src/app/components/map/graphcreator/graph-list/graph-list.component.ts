@@ -3,8 +3,8 @@ import {Marker} from 'leaflet/src/layer/marker/Marker.js';
 import {StoreService} from "../../../../services/store.service";
 import * as L from 'leaflet';
 import {mark} from "@angular/compiler-cli/src/ngtsc/perf/src/clock";
-import {GraphService} from "../../../../services/graph.service";
-import {Graph} from "../../../../model/Graphs/Graph";
+import {GraphService2} from "../../../../services/graph2.service";
+import {Graph2} from "../../../../model/Graphs2/Graph2";
 import {ToastrService} from "ngx-toastr";
 
 @Component({
@@ -14,7 +14,7 @@ import {ToastrService} from "ngx-toastr";
 })
 export class GraphListComponent implements OnInit, OnChanges {
 
-  graphs: Graph[];
+  graphs: Graph2[];
 
   modalID = "graphListModal";
   selectedGraph;
@@ -23,12 +23,13 @@ export class GraphListComponent implements OnInit, OnChanges {
   graph;
 
   @Output()
-  graphToEdit: EventEmitter<Graph> = new EventEmitter<Graph>();
+  graphToEdit: EventEmitter<Graph2> = new EventEmitter<Graph2>();
 
   constructor(private storeService: StoreService,
-              private graphService: GraphService,
+              private graphService: GraphService2,
               private toast: ToastrService) {
   }
+  
 
   ngOnInit() {
     this.graphService.getAllByMapId(this.storeService.currentMapId).subscribe(
@@ -45,11 +46,11 @@ export class GraphListComponent implements OnInit, OnChanges {
     )
   }
 
-  editGraph(graph: Graph) {
+  editGraph(graph: Graph2) {
     this.graphToEdit.emit(graph);
   }
 
-  deleteGraph(graph: Graph) {
+  deleteGraph(graph: Graph2) {
     this.graphs = this.graphs.filter(next => next != graph);
     // this.graphService.delete(graph).subscribe(
     //   result => result,

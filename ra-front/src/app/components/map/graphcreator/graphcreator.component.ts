@@ -7,10 +7,10 @@ import '../../../../../node_modules/leaflet-contextmenu/dist/leaflet.contextmenu
 import 'leaflet-arrowheads';
 import '../../../../lib/leaflet-easybutton/src/easy-button';
 import '../../../../lib/leaflet-easybutton/src/easy-button.css';
-import {Graph} from '../../../model/Graphs/Graph';
-import {Edge} from '../../../model/Graphs/Edge';
-import {Vertex} from '../../../model/Graphs/Vertex';
-import {GraphService} from "../../../services/graph.service";
+import {Graph2} from '../../../model/Graphs2/Graph2';
+import {Edge2} from '../../../model/Graphs2/Edge2';
+import {Node} from '../../../model/Graphs2/Node';
+import {GraphService2} from "../../../services/graph2.service";
 import {StoreService} from "../../../services/store.service";
 import { StandService } from '../../../services/stand.service';
 import { Stand } from '../../../model/Stand/Stand';
@@ -60,7 +60,7 @@ export class GraphcreatorComponent implements OnInit, OnDestroy {
 
   constructor(private mapService: MapService,
               private settingsService: SettingsService,
-              private graphService: GraphService,
+              private graphService2: GraphService2,
               private standService: StandService,
               private storeService: StoreService,
               private toast: ToastrService) {
@@ -404,32 +404,39 @@ export class GraphcreatorComponent implements OnInit, OnDestroy {
   }
 
   public saveGraph(){
-    let graph: Graph = new Graph();
-    let graphEdges: Edge[] = [];
+    let graph: Graph2 = new Graph2();
+    let graphEdges: Edge2[] = [];
+    let graphNodes: Node[] = [];
+    let connectedNodes: string[] = [];
     let verticles_all = this.vertices.concat(this.vertices_hidden);
     this.edges.forEach(edge => {
       let marker1 = verticles_all.filter(marker => marker._leaflet_id === edge.markerIDs[0])[0];
-      let vertexA: Vertex = new Vertex(
-        this.getRealCoordinates(edge._latlngs[0].lng, this.mapOriginX),
-        this.getRealCoordinates(edge._latlngs[0].lat, this.mapOriginY),
-        marker1.poiID,
-        marker1.nodeID,
-        marker1.type
-      );
       let marker2 = verticles_all.filter(marker => marker._leaflet_id === edge.markerIDs[1])[0];
-      let vertexB: Vertex = new Vertex(
-        this.getRealCoordinates(edge._latlngs[1].lng, this.mapOriginX),
-        this.getRealCoordinates(edge._latlngs[1].lat, this.mapOriginY),
-        marker2.poiID,
-        marker2.nodeID,
-        marker2.type
-      );
-      let graphEdge = new Edge(vertexA, vertexB, edge.biDirected, edge.narrow, edge.isActive);
+      let type = edge.biDirected ? 2 : 0;
+      type += edge.narrow ? 1 : 0;
+      let graphEdge = new Edge2(marker1.nodeID.toString(), marker2.nodeID.toString(), type, edge.isActive);
       graphEdges.push(graphEdge)
+      if (!connectedNodes.includes(marker1._leaflet_id)){
+        connectedNodes.push(marker1._leaflet_id);
+      }
+      if (!connectedNodes.includes(marker2._leaflet_id)){
+        connectedNodes.push(marker2._leaflet_id);
+      }
     });
     graph.edges = graphEdges;
+
+    connectedNodes.forEach( marker_id => {
+      let vertex = verticles_all.filter(marker => marker._leaflet_id === marker_id)[0];
+      let node = new Node(vertex.nodeID.toString(),
+                          this.getRealCoordinates(vertex.getLatLng().lng, this.mapOriginX),
+                          this.getRealCoordinates(vertex.getLatLng().lat, this.mapOriginY),
+                          vertex.poiID, vertex.type);
+      graphNodes.push(node);
+    });
+    graph.nodes = graphNodes;
+
     if (this.graphID) graph.id = this.graphID;
-    this.graphService.save(graph).subscribe(result => {
+    this.graphService2.save(graph).subscribe(result => {
       this.graph = graph;
       this.toast.success('Graf zapisany w bazie');
     });
@@ -453,7 +460,7 @@ export class GraphcreatorComponent implements OnInit, OnDestroy {
     if(addPOI) this.addPOItomap();
   }
 
-  editExistingGraph(graph: Graph) {
+  editExistingGraph(graph: Graph2) {
     this.clearMap(0);
     if (!graph) return;
     this.graphID = graph.id;
@@ -462,22 +469,26 @@ export class GraphcreatorComponent implements OnInit, OnDestroy {
     let marker2;
     let markers = [];
     graph.edges.forEach(edge => {
-      const vertPosA = L.latLng([this.getMapCoordinates(edge.vertexA.posY, this.mapOriginY), this.getMapCoordinates(edge.vertexA.posX, this.mapOriginX)]);
-      const vertPosB = L.latLng([this.getMapCoordinates(edge.vertexB.posY, this.mapOriginY), this.getMapCoordinates(edge.vertexB.posX, this.mapOriginX)]);
+      let startNode = graph.nodes.filter(node => node.id === edge.startNode)[0];
+      let endNode = graph.nodes.filter(node => node.id === edge.endNode)[0];
+      const vertPosA = L.latLng([this.getMapCoordinates(startNode.posY, this.mapOriginY),
+                                 this.getMapCoordinates(startNode.posX, this.mapOriginX)]);
+      const vertPosB = L.latLng([this.getMapCoordinates(endNode.posY, this.mapOriginY),
+                                 this.getMapCoordinates(endNode.posX, this.mapOriginX)]);
       if (!existingWaypoints.includes(vertPosA + '')) {//toString in order to not mind about reference
-        var nodeID = edge.vertexA.nodeID;
+        var nodeID = parseInt(startNode.id);
         if (!nodeID){
           var d = new Date();
           nodeID = d.getTime();
           if (nodeID <= this.lastNodeID) nodeID = this.lastNodeID + 1;
           this.lastNodeID = nodeID;
         }
-        marker1 = this.createNewMarker(vertPosA, edge.vertexA.poiID, nodeID, edge.vertexA.type);
+        marker1 = this.createNewMarker(vertPosA, startNode.poiID, nodeID, startNode.type);
         markers.push(marker1);
         existingWaypoints.push(vertPosA + '');
       }
       if (!existingWaypoints.includes(vertPosB + '')) {
-        var nodeID = edge.vertexB.nodeID;
+        var nodeID = parseInt(endNode.id);
         if (!nodeID){
           var d = new Date();
           nodeID = d.getTime();
@@ -485,17 +496,21 @@ export class GraphcreatorComponent implements OnInit, OnDestroy {
           this.lastNodeID = nodeID;
           
         }
-        marker2 = this.createNewMarker(vertPosB, edge.vertexB.poiID, nodeID, edge.vertexB.type);
+        marker2 = this.createNewMarker(vertPosB, endNode.poiID, nodeID, endNode.type);
         markers.push(marker2);
         existingWaypoints.push(vertPosB + '');
       }
     });
     graph.edges.forEach(edge => {
-      const vertPosA = L.latLng([this.getMapCoordinates(edge.vertexA.posY, this.mapOriginY), this.getMapCoordinates(edge.vertexA.posX, this.mapOriginX)]);
-      const vertPosB = L.latLng([this.getMapCoordinates(edge.vertexB.posY, this.mapOriginY), this.getMapCoordinates(edge.vertexB.posX, this.mapOriginX)]);
+      let startNode = graph.nodes.filter(node => node.id === edge.startNode)[0];
+      let endNode = graph.nodes.filter(node => node.id === edge.endNode)[0];
+      const vertPosA = L.latLng([this.getMapCoordinates(startNode.posY, this.mapOriginY),
+                                 this.getMapCoordinates(startNode.posX, this.mapOriginX)]);
+      const vertPosB = L.latLng([this.getMapCoordinates(endNode.posY, this.mapOriginY),
+                                 this.getMapCoordinates(endNode.posX, this.mapOriginX)]);
       marker1 = markers.find(marker => JSON.stringify(marker._latlng) === JSON.stringify(vertPosA));
       marker2 = markers.find(marker => JSON.stringify(marker._latlng) === JSON.stringify(vertPosB));
-      this.drawEditableEdge(marker1, marker2, edge.biDirected, edge.narrow, edge.isActive)
+      this.drawEditableEdge(marker1, marker2, (edge.type & 2) > 0, (edge.type & 1) > 0, edge.isActive)
     });
     this.hiddenPOImarkersFix();
     this.addPOItomap();
