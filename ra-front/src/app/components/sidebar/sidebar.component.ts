@@ -28,6 +28,8 @@ export class SidebarComponent implements OnInit {
   usersID: string[] = [];
   frontVersion = '';
   backVersion = '';
+
+  systemStatus = 'OK';
   private instanceInfo: InstanceInfo = new InstanceInfo('', '', '');
 
   private source = timer(1000, 5000);
@@ -84,6 +86,16 @@ export class SidebarComponent implements OnInit {
       this.robotTaskService.getRobotTasks().subscribe(
         tasks=>{
           this.autoUpdate(tasks);
+      });
+      this.robotService.getAll().subscribe( data => {
+          this.robotDataloaded = true;
+          data.forEach(element => {
+            status = 'OK';
+            if (element.status[0].name === 'ERROR') status = 'ERROR';
+            else if (element.status[0].name === 'WARNING' && status === 'OK') status = 'WARNING';
+          });
+          this.systemStatus = status;
+          this.robotList = data;
       });
     });
   }

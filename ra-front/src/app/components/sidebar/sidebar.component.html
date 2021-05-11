@@ -46,6 +46,15 @@
                     <h5 class="mb-0 white-text font-weight-bold">
                         Roboty
                         <i class="fa fa-angle-down rotate-icon" style="float: right;" id="collapseIcon2"></i>
+                        <i
+                        class="material-icons warning2"
+                        *ngIf="systemStatus === 'WARNING'"
+                        >warning</i>
+
+                        <i
+                        class="material-icons warning"
+                        *ngIf="systemStatus === 'ERROR'"
+                        >error</i>
                     </h5>
                 </a>
             </div>
@@ -57,22 +66,31 @@
                         <!--<div class="card-header card-item" (click)="showRobotonMap()">-->
                         <div>
                             <b>{{ robot.id }}</b>
+                            <i
+                            class="material-icons warning2"
+                            *ngIf="robot.status[0].name === 'WARNING'"
+                            >warning</i>
+
+                            <i
+                            class="material-icons warning"
+                            *ngIf="robot.status[0].name === 'ERROR'"
+                            >error</i>
+
+                            <i
+                            class="material-icons warning"
+                            *ngIf="robot.batteryLevel < 10"
+                            >battery_alert</i>
                         </div>
                         <div>
                             <i>
-                {{ robot.model.id }}
-                <i
-                  class="material-icons warning"
-                  *ngIf="robot.batteryLevel < 10"
-                  >battery_alert</i
-                >
-                <i class="material-icons arrow">play_arrow</i>
+                                {{ robot.model.id }}
+                                <i class="material-icons arrow">play_arrow</i>
                             </i>
                         </div>
                         <div>
                             <u>
-                {{ robot.robotIp }}
-              </u>
+                                {{ robot.robotIp }}
+                            </u>
                         </div>
                     </div>
                 </div>
