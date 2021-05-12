@@ -95,10 +95,8 @@ export class MapComponent implements OnInit, OnDestroy {
   private overlays = {
     Online: this.robotStatusLayer,
     Grafy: this.graphs,
-    Obszary: this.polygons,
-    Korytarze: this.corridors,
-    Stanowiska: this.standLayer,
-    Sciezki: this.movementPaths
+    // Obszary: this.polygons,
+    Stanowiska: this.standLayer
   };
 
   //Leaflet accepts coordinates in [y,x]
@@ -229,19 +227,20 @@ export class MapComponent implements OnInit, OnDestroy {
 
 
 
-    this.graphService.getAll().subscribe(
+    this.graphService.getAllByMapId(this.mapId).subscribe(
       graphs => {
         graphs.map(graph => this.drawGraph(graph))
 
       }
     );
 
-    this.polygonService.getPolygons().subscribe(
-      polygons => {
-        this.allpolygons = polygons;
-        this.drawPolygons(this.allpolygons);
-      }
-    );
+    // TODO: FIX after polygon model is updated
+    // this.polygonService.getPolygons().subscribe(
+    //   polygons => {
+    //     this.allpolygons = polygons;
+    //     this.drawPolygons(this.allpolygons);
+    //   }
+    // );
 
     this.standService.getAllByMapId(this.mapId).subscribe(
       stands => {
@@ -261,45 +260,6 @@ export class MapComponent implements OnInit, OnDestroy {
       // );
       //this.drawRobots(this.robots);
     };
-    this.corridorService.getCorridors().subscribe(
-      corridors => {
-        this.drawCorridors(corridors);
-      }
-    );
-
-    this.pathsService.getMovementPaths().subscribe(
-      paths => {
-        this.drawPaths(paths);
-      }
-    );
-  }
-
-  private drawCorridors(corridor: Corridor[]) {
-    corridor.forEach(corridor => {
-      let corridorPoints = [];
-      corridor.points.forEach(point => {
-        const pointPosition = L.latLng([this.getMapCoordinates(point.y, this.mapOriginY), this.getMapCoordinates(point.x, this.mapOriginX)]);
-        corridorPoints.push(pointPosition);
-      });
-      let corridorPolygon = L.polygon(corridorPoints, {color: 'red'}).addTo(this.corridors).bindTooltip(corridor.name, {
-        sticky: true
-      });
-    })
-
-  }
-
-  private drawPaths(paths: MovementPath[]) {
-    paths.forEach(path => {
-        let polylinePoints = [];
-        path.points.forEach(point => {
-          const pointPosition = L.latLng([this.getMapCoordinates(point.y, this.mapOriginY),this.getMapCoordinates(point.x, this.mapOriginX)]);
-          polylinePoints.push(pointPosition);
-        });
-        new L.Polyline(polylinePoints).addTo(this.movementPaths).bindTooltip(path.name, {
-          sticky: true
-        });
-      }
-    )
   }
 
   private drawStand(stands: Stand[]) {
