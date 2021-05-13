@@ -9,6 +9,9 @@ import pl.raptors.ra_back.domain.type.TaskPriority;
 import pl.raptors.ra_back.repository.robots.RobotTaskRepository;
 import pl.raptors.ra_back.service.CRUDService;
 
+import pl.raptors.ra_back.configuration.Mqtt;
+import org.eclipse.paho.client.mqttv3.MqttMessage;
+
 import java.util.List;
 
 @Service
@@ -19,7 +22,18 @@ public class RobotTaskService implements CRUDService<RobotTask> {
 
     @Override
     public RobotTask addOne(RobotTask robotTask) {
-        return robotTaskRepository.save(robotTask);
+        RobotTask output = robotTaskRepository.save(robotTask);
+        if (output.getStatus().getName().equals("To Do")){
+            MqttMessage mqttMessage = new MqttMessage(("{\"task\":\""+ output.getId() + "\"}").getBytes());
+            mqttMessage.setQos(2);
+            mqttMessage.setRetained(false);
+            try{
+                Mqtt.getInstance().publish("/new_task",  mqttMessage);
+            } catch(org.eclipse.paho.client.mqttv3.MqttException e){
+                System.out.println("MQTT Error");
+            }
+        }
+        return output;
     }
 
     @Override
@@ -42,7 +56,18 @@ public class RobotTaskService implements CRUDService<RobotTask> {
         if(robotTask.getPriority()==null)robotTask.setPriority(oldRobotTask.getPriority());
         if(robotTask.getStatus()==null)robotTask.setStatus(oldRobotTask.getStatus());
         if(robotTask.getUserID()==null)robotTask.setUserID(oldRobotTask.getUserID());
-        return robotTaskRepository.save(robotTask);
+        RobotTask output = robotTaskRepository.save(robotTask);
+        if (output.getStatus().getName().equals("To Do")){
+            MqttMessage mqttMessage = new MqttMessage(("{\"task\":\""+ output.getId() + "\"}").getBytes());
+            mqttMessage.setQos(2);
+            mqttMessage.setRetained(false);
+            try{
+                Mqtt.getInstance().publish("/new_task",  mqttMessage);
+            } catch(org.eclipse.paho.client.mqttv3.MqttException e){
+                System.out.println("MQTT Error");
+            }
+        }
+        return output;
     }
 
     @Override
