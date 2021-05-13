@@ -2,11 +2,11 @@ import {Component, OnInit} from '@angular/core';
 import {ContactInfo} from '../../model/Settings/ContactInfo';
 import {InstanceInfo} from '../../model/Settings/InstanceInfo';
 import {MapInfo} from '../../model/Settings/MapInfo';
-import {Graph} from '../../model/Graphs/Graph';
+import {Graph2} from '../../model/Graphs2/Graph2';
 import {SettingsService} from '../../services/settings.service';
 import {StoreService} from '../../services/store.service';
 import {MapService} from '../../services/map.service';
-import {GraphService} from '../../services/graph.service';
+import {GraphService2} from '../../services/graph2.service';
 import {ContactInfos} from '../../model/Settings/ContactInfos';
 import {AuthService} from '../../services/auth.service';
 import {RobotTask} from '../../model/Robots/RobotTask';
@@ -30,11 +30,11 @@ export class SettingsComponent implements OnInit {
   instanceInfo: InstanceInfo = new InstanceInfo('', '', '');
   currentMap: MapInfo = new MapInfo('', '', 0, 0, 0, 0, 0, 0);
   mapsData: MapInfo[];
-  graphs: Graph[];
+  graphs: Graph2[];
 
   constructor(private settingsService: SettingsService,
               private mapService: MapService,
-              private graphService: GraphService,
+              private graphService: GraphService2,
               private storeService: StoreService,
               public authService: AuthService,
               private toastr: ToastrService) {
